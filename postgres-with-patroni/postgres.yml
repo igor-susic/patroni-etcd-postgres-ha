@@ -1,0 +1,75 @@
+scope: # Will be set automatically
+name: # Will be set automatically
+namespace: # Will be set automatically
+
+restapi:
+  listen: '*:8008'
+  connect_address: # WIll be set automatically
+
+etcd3:
+  host: # Will be set automatically
+
+bootstrap:
+  dcs:
+    ttl: 30
+    loop_wait: 10
+    retry_timeout: 10
+    maximum_lag_on_failover: 1048576
+    master_start_timeout: 0
+    postgresql:
+      parameters:
+        wal_level: hot_standby
+        hot_standby: "on"
+        max_connections: 100
+        max_worker_processes: 8
+        wal_keep_segments: 8
+        max_wal_senders: 10
+        max_replication_slots: 10
+        max_prepared_transactions: 0
+        max_locks_per_transaction: 64
+        wal_log_hints: "on"
+        track_commit_timestamp: "off"
+
+  # some desired options for 'initdb'
+  initdb:  # Note: It needs to be a list (some options need values, others are switches)
+  - encoding: UTF8
+  - data-checksums
+
+  pg_hba:
+  - host replication replicator 0.0.0.0/0 md5
+  - host all all 0.0.0.0/0 md5
+
+  users:
+    admin:
+      password: # WIll be set automatically
+      options:
+        - createrole
+        - createdb
+
+postgresql:
+  data_dir: /var/lib/postgresql/data
+  bin_dir: /usr/lib/postgresql/12/bin
+  pgpass: /tmp/pgpass0
+  authentication:
+    superuser:
+      username: # WIll be set automatically
+      password: # Will be set automatically
+    replication:
+      username: # WIll be set automatically
+      password: # WIll be set automatically
+    rewind:
+      username: # WIll be set automatically
+      password: # WIll be set automatically
+  listen: '*:5432'
+  connect_address:  # WIll be set automatically
+  use_pg_rewind: true
+  use_slots: true
+
+watchdog:
+  mode: off
+
+tags:
+    nofailover: false
+    noloadbalance: false
+    clonefrom: false
+    nosync: false
