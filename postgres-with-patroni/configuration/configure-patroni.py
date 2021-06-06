@@ -49,6 +49,12 @@ def setup_patroni_postgres_yml():
         pg_hba[0] = f"host replication {os.environ.get('REPLICATION_USERNAME')} 0.0.0.0/0 md5"
         patroni_config['bootstrap']['pg_hba'] = pg_hba
 
+        # Set binary directory depending on the Postgres version
+        patroni_config['postgresql']['bin_dir'] = f"/usr/lib/postgresql/{os.environ.get('POSTGRES_VERSION')}/bin"
+
+        # Set data directory
+        patroni_config['postgresql']['data_dir'] = f"/var/lib/postgresql/{os.environ.get('POSTGRES_VERSION')}/data"
+
     with open(os.environ.get("POSTGRES_CONFIGURATION_YAML"), 'w') as configuration:
         # Save back changes to disk
         yaml.dump(patroni_config, configuration)
