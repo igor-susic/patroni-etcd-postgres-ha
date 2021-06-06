@@ -12,6 +12,23 @@ def setup_patroni_postgres_yml():
     yaml.allow_duplicate_keys = True
     yaml.preserve_quotes = True
 
+    try:
+        assert os.environ.get("POSTGRES_CONFIGURATION_YAML")
+        assert os.environ.get("SUPERUSER_USERNAME")
+        assert os.environ.get("SUPERUSER_PASSWORD")
+        assert os.environ.get("ADMIN_PASSWORD")
+        assert os.environ.get('ETCD_HOST')
+        assert os.environ.get('ETCD_PORT')
+        assert os.environ.get("REPLICATION_USERNAME")
+        assert os.environ.get("REPLICATION_PASSWORD")
+        assert os.environ.get("PG_REWIND_USERNAME")
+        assert os.environ.get("PG_REWIND_PASSWORD")
+        assert os.environ.get("PATRONI_POSTGRESQL_CONNECT_ADDRESS")
+        assert os.environ.get("PATRONI_REST_API_CONNECT_ADDRESS")
+        assert os.environ.get("POSTGRES_VERSION")
+    except AssertionError as e:
+        raise AttributeError("One of the variables is missing, will about this script. Error: %s" % e)
+
     with open(os.environ.get("POSTGRES_CONFIGURATION_YAML")) as configuration:
         patroni_config = yaml.load(configuration)
 
